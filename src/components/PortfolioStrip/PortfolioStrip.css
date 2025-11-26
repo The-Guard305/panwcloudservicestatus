@@ -1,0 +1,136 @@
+.portfolio-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: #000000;
+  border-bottom: 3px solid #00ffff;
+  box-shadow: 0 6px 30px rgba(0, 255, 255, 0.4), inset 0 1px 0 rgba(0, 255, 255, 0.1);
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.portfolio-strip--error {
+  background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+}
+
+.portfolio-strip--loading {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
+
+.portfolio-strip__status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.portfolio-strip__indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px currentColor, 0 0 25px currentColor, 0 0 40px currentColor;
+  animation: pulse 2s infinite;
+  filter: brightness(2) saturate(1.5);
+}
+
+.portfolio-strip__indicator--loading {
+  background-color: #6b7280;
+  animation: pulse-loading 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes pulse-loading {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.portfolio-strip__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.portfolio-strip__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.portfolio-strip__description {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.portfolio-strip__metrics {
+  display: flex;
+  gap: 2rem;
+}
+
+.portfolio-strip__metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  min-width: 100px;
+}
+
+.portfolio-strip__metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.portfolio-strip__metric-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.portfolio-strip__timestamp {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.portfolio-strip__refreshing {
+  color: #60a5fa;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .portfolio-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .portfolio-strip__metrics {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .portfolio-strip__timestamp {
+    width: 100%;
+    text-align: left;
+  }
+}

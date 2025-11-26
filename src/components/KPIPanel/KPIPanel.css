@@ -1,0 +1,156 @@
+.kpi-panel {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.kpi-panel--loading {
+  min-height: 200px;
+}
+
+.kpi-panel__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.kpi-panel__loading,
+.kpi-panel__empty {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+}
+
+.kpi-panel__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+/* KPI Card */
+.kpi-card {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.kpi-card--large {
+  grid-column: span 2;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpi-card__label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.kpi-card__value-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.kpi-card__value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.kpi-card__value--large {
+  font-size: 2rem;
+}
+
+.kpi-card__unit {
+  font-size: 0.625rem;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.kpi-card__gauge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kpi-card__gauge-inner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #1e293b;
+}
+
+/* Severity Section */
+.kpi-panel__severity {
+  padding-top: 0.75rem;
+  border-top: 1px solid #334155;
+}
+
+.kpi-panel__severity-title {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 0.75rem;
+}
+
+.kpi-panel__severity-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Severity Bar */
+.severity-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.severity-bar__header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.625rem;
+}
+
+.severity-bar__label {
+  color: #94a3b8;
+}
+
+.severity-bar__count {
+  color: #64748b;
+}
+
+.severity-bar__track {
+  height: 6px;
+  background: #334155;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.severity-bar__fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+@media (max-width: 480px) {
+  .kpi-panel__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-card--large {
+    grid-column: span 1;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
