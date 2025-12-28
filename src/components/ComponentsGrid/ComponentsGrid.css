@@ -39,6 +39,21 @@
   gap: 0.75rem;
 }
 
+.components-grid__search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  background-color: #1e293b;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  color: #f8fafc;
+}
+
+.components-grid__search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
 .components-grid__family-filter {
   display: flex;
   flex-wrap: wrap;

@@ -19,12 +19,12 @@ export interface RegionFilter {
 export function extractRegion(name: string, description?: string | null): Region {
   const text = `${name} ${description || ''}`.toLowerCase();
   
-  if (text.includes('us-east') || text.includes('virginia') || text.includes('n. virginia')) return 'US-East';
-  if (text.includes('us-west') || text.includes('oregon') || text.includes('california')) return 'US-West';
-  if (text.includes('eu-west') || text.includes('ireland') || text.includes('london')) return 'EU-West';
-  if (text.includes('eu-central') || text.includes('frankfurt') || text.includes('germany')) return 'EU-Central';
-  if (text.includes('apac-east') || text.includes('tokyo') || text.includes('singapore')) return 'APAC-East';
-  if (text.includes('apac-south') || text.includes('mumbai') || text.includes('sydney')) return 'APAC-South';
+  if (text.includes('us-east') || text.includes('virginia') || text.includes('n. virginia') || text.includes('ohio') || text.includes('canada')) return 'US-East';
+  if (text.includes('us-west') || text.includes('oregon') || text.includes('california') || text.includes('n. california')) return 'US-West';
+  if (text.includes('eu-west') || text.includes('ireland') || text.includes('london') || text.includes('paris') || text.includes('netherlands')) return 'EU-West';
+  if (text.includes('eu-central') || text.includes('frankfurt') || text.includes('germany') || text.includes('zurich')) return 'EU-Central';
+  if (text.includes('apac-east') || text.includes('tokyo') || text.includes('seoul') || text.includes('hong kong') || text.includes('osaka')) return 'APAC-East';
+  if (text.includes('apac-south') || text.includes('mumbai') || text.includes('sydney') || text.includes('singapore') || text.includes('australia') || text.includes('india')) return 'APAC-South';
   
   return 'Global';
 }

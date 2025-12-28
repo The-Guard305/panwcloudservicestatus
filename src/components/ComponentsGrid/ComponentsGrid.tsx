@@ -32,6 +32,7 @@ export function ComponentsGrid({
   const [selectedFamily, setSelectedFamily] = useState<ProductFamily | 'All'>('All');
   const [showImpactedOnly, setShowImpactedOnly] = useState(false);
   const [selectedRegions, setSelectedRegions] = useState<Region[]>(['All']);
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedComponent, setSelectedComponent] = useState<Component | null>(null);
 
   const groupedComponents = useMemo(() => groupComponents(components), [components]);
@@ -71,8 +72,17 @@ export function ComponentsGrid({
       });
     }
 
+    // Apply search filter
+    if (searchQuery) {
+      const lowercasedQuery = searchQuery.toLowerCase();
+      filtered = filtered.filter((c) =>
+        c.name.toLowerCase().includes(lowercasedQuery) ||
+        c.description?.toLowerCase().includes(lowercasedQuery)
+      );
+    }
+
     return filtered;
-  }, [components, selectedFamily, showImpactedOnly, selectedRegions]);
+  }, [components, selectedFamily, showImpactedOnly, selectedRegions, searchQuery]);
 
   // Count incidents per component (by name matching)
   const incidentCountByComponent = useMemo(() => {
@@ -144,6 +154,13 @@ export function ComponentsGrid({
         </h2>
 
         <div className="components-grid__filters">
+          <input
+            type="text"
+            placeholder="Search components..."
+            className="components-grid__search-input"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
           <div className="components-grid__family-filter">
             <button
               className={`components-grid__filter-btn ${selectedFamily === 'All' ? 'components-grid__filter-btn--active' : ''}`}

@@ -80,23 +80,21 @@ export function getProductFamily(componentName: string): ProductFamily {
   
   // Check for specific services first (exact matches for specific filters)
   if (name.includes('logging')) {
-    console.log('Found logging component:', componentName, '-> Strata Logging Service');
     return 'Strata Logging Service';
   }
-  if (name === 'dlp' || name.includes('dlp (') || name.includes('data loss prevention')) {
-    console.log('Found DLP component:', componentName, '-> DLP');
+  if (/\bdlp\b/.test(name) || name.includes('data loss prevention')) {
     return 'DLP';
   }
   
   // Then check broader categories (but exclude Strata Logging Service from general Strata)
-  if ((name.includes('strata') || name.includes('firewall') || name.includes('panorama') || name.includes('globalprotect')) 
+  if ((name.includes('strata') || name.includes('firewall') || name.includes('panorama') || name.includes('globalprotect') || name.includes('wildfire') || name.includes('threat vault') || name.includes('dns security') || name.includes('url filtering') || name.includes('threat prevention') || name.includes('advanced threat prevention')) 
       && !name.includes('logging')) {
     return 'Strata';
   }
-  if (name.includes('prisma') || name.includes('sase') || name.includes('cloud')) {
+  if (name.includes('prisma') || name.includes('sase') || name.includes('cloud') || name.includes('access') || name.includes('sd-wan')) {
     return 'Prisma';
   }
-  if (name.includes('cortex') || name.includes('xdr') || name.includes('xsoar') || name.includes('xpanse')) {
+  if (name.includes('cortex') || name.includes('xdr') || name.includes('xsoar') || name.includes('xpanse') || name.includes('data lake') || name.includes('expander') || name.includes('xiam')) {
     return 'Cortex';
   }
   if (name.includes('unit 42') || name.includes('unit42')) {
