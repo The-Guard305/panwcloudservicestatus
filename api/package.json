@@ -1,0 +1,9 @@
+{
+  "name": "panw-status-api",
+  "private": true,
+  "version": "1.0.0",
+  "main": "panw-status/index.js",
+  "dependencies": {
+    "@azure/functions": "^4.0.0"
+  }
+}

@@ -10,30 +10,82 @@ interface UseApiState<T> {
 interface UseApiOptions {
   refreshInterval?: number; // in milliseconds
   enabled?: boolean;
+  key?: string; // Cache key for deduplication and caching
+  cacheTtl?: number; // Cache TTL in ms
+}
+
+// Global cache and inflight requests
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const cache = new Map<string, { data: any; timestamp: number }>();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const inflight = new Map<string, Promise<any>>();
+
+async function retryWithBackoff<T>(fn: () => Promise<T>, retries = 3, delay = 1000): Promise<T> {
+  try {
+    return await fn();
+  } catch (err) {
+    if (retries === 0) throw err;
+    await new Promise(resolve => setTimeout(resolve, delay));
+    return retryWithBackoff(fn, retries - 1, delay * 2);
+  }
 }
 
 export function useApi<T>(
   fetcher: () => Promise<T>,
   options: UseApiOptions = {}
 ): UseApiState<T> & { refetch: () => Promise<void> } {
-  const { refreshInterval, enabled = true } = options;
+  const { refreshInterval, enabled = true, key, cacheTtl = 60000 } = options;
   const [state, setState] = useState<UseApiState<T>>({
-    data: null,
-    loading: true,
+    data: key && cache.has(key) ? cache.get(key)!.data : null,
+    loading: !key || !cache.has(key),
     error: null,
-    lastUpdated: null,
+    lastUpdated: key && cache.has(key) ? new Date(cache.get(key)!.timestamp) : null,
   });
 
   const fetcherRef = useRef(fetcher);
   fetcherRef.current = fetcher;
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (force = false) => {
     if (!enabled) return;
+
+    // Check cache if not forced
+    if (!force && key && cache.has(key)) {
+      const entry = cache.get(key)!;
+      if (Date.now() - entry.timestamp < cacheTtl) {
+        setState(prev => ({
+          ...prev,
+          data: entry.data,
+          loading: false,
+          error: null,
+          lastUpdated: new Date(entry.timestamp)
+        }));
+        return;
+      }
+    }
 
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      const data = await fetcherRef.current();
+      let promise: Promise<T>;
+
+      if (key) {
+        if (inflight.has(key)) {
+          promise = inflight.get(key)!;
+        } else {
+          promise = fetcherRef.current();
+          inflight.set(key, promise);
+          promise.finally(() => inflight.delete(key));
+        }
+      } else {
+        promise = fetcherRef.current();
+      }
+
+      const data = await retryWithBackoff(async () => await promise);
+
+      if (key) {
+        cache.set(key, { data, timestamp: Date.now() });
+      }
+
       setState({
         data,
         loading: false,
@@ -47,7 +99,7 @@ export function useApi<T>(
         error: error instanceof Error ? error : new Error('Unknown error'),
       }));
     }
-  }, [enabled]);
+  }, [enabled, key, cacheTtl]);
 
   useEffect(() => {
     fetchData();
@@ -56,13 +108,13 @@ export function useApi<T>(
   useEffect(() => {
     if (!refreshInterval || !enabled) return;
 
-    const intervalId = setInterval(fetchData, refreshInterval);
+    const intervalId = setInterval(() => fetchData(true), refreshInterval);
     return () => clearInterval(intervalId);
   }, [refreshInterval, enabled, fetchData]);
 
   return {
     ...state,
-    refetch: fetchData,
+    refetch: () => fetchData(true),
   };
 }
 
@@ -102,7 +154,7 @@ export function useCombinedApi<T extends Record<string, unknown>>(
     try {
       const results = await Promise.all(
         keys.map(async (key) => {
-          const data = await fetchersRef.current[key]();
+          const data = await retryWithBackoff(() => fetchersRef.current[key]());
           return [key, data] as const;
         })
       );
@@ -120,7 +172,7 @@ export function useCombinedApi<T extends Record<string, unknown>>(
         error: error instanceof Error ? error : new Error('Unknown error'),
       }));
     }
-  }, [enabled, keys]);
+  }, [enabled]); // Removed keys from dependency
 
   useEffect(() => {
     fetchAll();
