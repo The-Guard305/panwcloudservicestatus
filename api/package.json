@@ -3,7 +3,16 @@
   "private": true,
   "version": "1.0.0",
   "main": "panw-status/index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@azure/functions": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
   }
 }
