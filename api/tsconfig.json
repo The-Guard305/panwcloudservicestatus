@@ -5,6 +5,7 @@
     "noImplicitAny": false,
     "moduleResolution": "node",
     "sourceMap": true,
+    "skipLibCheck": true,
     "outDir": ".",
     "baseUrl": "."
   },
